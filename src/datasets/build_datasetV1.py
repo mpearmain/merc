@@ -29,9 +29,9 @@ train_df = pd.read_csv('./data/raw/train.csv')
 test_df = pd.read_csv('./data/raw/test.csv')
 print('Loaded')
 
-print("Recoding Outliers in y")
-train_df['y'] = recode_outlier(train_df, col='y', ulimit=190)
-print("Recoded")
+print("Remove Outliers in y")
+train_df = train_df[train_df.y < 180]
+print("Removed")
 
 y_train = train_df['y'].values
 id_train = train_df['ID'].values
@@ -52,7 +52,10 @@ df = pd.concat([train_df, test_df], axis=0)
 print("Building Binary counts values")
 df['zero_counts'] = binary_counts(df[df.columns.difference(NOT_BINARY_COLS)], 0)
 df['one_counts'] = binary_counts(df[df.columns.difference(NOT_BINARY_COLS)], 1)
-df['binary_hashmap'] = binary_hashmap(df[df.columns.difference(NOT_BINARY_COLS)], low_count=5)
+df['binary_prop'] = df['one_counts'] / df['zero_counts']
+df['binary_ones_pct'] = df['one_counts'] / (df['one_counts'] + df['zero_counts'])
+df['binary_zeros_pct'] = df['zero_counts'] / (df['one_counts'] + df['zero_counts'])
+df['binary_hashmap'] = binary_hashmap(df[df.columns.difference(NOT_BINARY_COLS)], low_count=4)
 
 # For Tree based models only - Lets recode non-binary cols to be used in base models.
 print("Recoding object values")
