@@ -18,6 +18,11 @@ train_df = pd.read_csv('./data/raw/train.csv')
 test_df = pd.read_csv('./data/raw/test.csv')
 print('Loaded')
 
+print("Remove Outliers in y")
+train_df = train_df[train_df.y < 180]
+print("Removed")
+
+
 y_train = train_df['y'].values
 id_train = train_df['ID'].values
 id_test = test_df['ID'].values

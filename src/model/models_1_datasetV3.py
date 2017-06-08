@@ -47,11 +47,11 @@ params2 = {'n_trees': 500, 'eta': 0.005, 'max_depth': 4, 'subsample': 0.95, 'obj
 
 estimators = {XGBRegressor(num_round=5000, verbose_eval=False, params=params1, early_stopping_rounds=25,
                            eval_metric=xgb_r2_score): 'XGB1' + BUILD_NAME,
-              XGBRegressor(num_round=673, verbose_eval=False, params=params2,
+              XGBRegressor(num_round=1500, verbose_eval=False, params=params2,
                            eval_metric=xgb_r2_score): 'XGB2' + BUILD_NAME,
-              ElasticNet(alpha=0.01, l1_ratio=0.1, ): 'ElasticNet1' + BUILD_NAME,
-              ElasticNet(alpha=0.1, l1_ratio=0.1, ): 'ElasticNet2' + BUILD_NAME,
-              ElasticNet(alpha=1.01, l1_ratio=0.1, ): 'ElasticNet3' + BUILD_NAME}
+              ElasticNet(alpha=0.01, l1_ratio=0.05, ): 'ElasticNet1' + BUILD_NAME,
+              ElasticNet(alpha=0.1, l1_ratio=0.5, ): 'ElasticNet2' + BUILD_NAME,
+              ElasticNet(alpha=0.5, l1_ratio=0.01, ): 'ElasticNet3' + BUILD_NAME}
 
 merc = GeneralisedStacking(base_estimators_dict=estimators,
                            estimator_type='regression',
@@ -62,6 +62,11 @@ merc.fit(train, y_train)
 
 lvl1meta_train_regressor = merc.meta_train
 lvl1meta_test_regressor = merc.predict(test)
+
+lvl1meta_train_regressor['ID'] = id_train
+lvl1meta_train_regressor['y'] = y_train
+lvl1meta_test_regressor['ID'] = id_test
+
 print('Writing Parquets')
 # store
 fastparquet.write('./data/processed/metalvl1/xtrain_metalvl1' + BUILD_NAME + '.parq', lvl1meta_train_regressor,

@@ -64,7 +64,7 @@ estimators = {
                  eval_metric=xgb_r2_score): 'XGB3' + BUILD_NAME,
     XGBRegressor(num_round=5000, verbose_eval=False, params=params4, early_stopping_rounds=50): 'XGB4' + BUILD_NAME,
     XGBRegressor(num_round=5000, verbose_eval=False, params=params5, early_stopping_rounds=50): 'XGB5' + BUILD_NAME,
-    XGBRegressor(num_round=5000, verbose_eval=False, params=params6, early_stopping_rounds=50): 'XGB5' + BUILD_NAME}
+    XGBRegressor(num_round=5000, verbose_eval=False, params=params6, early_stopping_rounds=50): 'XGB6' + BUILD_NAME}
 
 merc = GeneralisedStacking(base_estimators_dict=estimators,
                            estimator_type='regression',
@@ -74,6 +74,10 @@ merc = GeneralisedStacking(base_estimators_dict=estimators,
 merc.fit(train, y_train)
 lvl1meta_train_regressor = merc.meta_train
 lvl1meta_test_regressor = merc.predict(test)
+
+lvl1meta_train_regressor['ID'] = id_train
+lvl1meta_train_regressor['y'] = y_train
+lvl1meta_test_regressor['ID'] = id_test
 
 print('Writing Parquets')
 # store

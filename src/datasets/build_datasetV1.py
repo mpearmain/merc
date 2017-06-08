@@ -21,6 +21,8 @@ Simply pick the functions required to 'build' a dataset and run models on these 
 BUILD_NAME = '_build_datasetV1'
 NOT_BINARY_COLS = ["X0", "X1", "X2", "X3", "X4", "X5", "X6", "X8"]
 CONSTANT_COLS = ['X11', 'X93', 'X107', 'X233', 'X235', 'X268', 'X289', 'X290', 'X293', 'X297', 'X330', 'X347']
+# https://www.kaggle.com/c/mercedes-benz-greener-manufacturing/discussion/34137 - Complementary cols
+COMPLEMENTARY_COLS = ['X29', 'X52', 'X54', 'X76', 'X128', 'X142', 'X186', 'X204', 'X232', 'X263', 'X156']
 
 # Read the base data
 print('Loading data ...')

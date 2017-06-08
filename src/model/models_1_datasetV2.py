@@ -40,9 +40,9 @@ def xgb_r2_score(preds, dtrain):
     labels = dtrain.get_label()
     return 'r2', r2_score(labels, preds)
 
-params1 = {"eta": 0.05, "subsample": 0.8, "min_child_weight": 1, "colsample_bytree": 0.8,
+params1 = {"eta": 0.05, "subsample": 0.9, "min_child_weight": 1, "colsample_bytree": 0.8,
            "max_depth": 8, 'silent': 1, "n_jobs": 12}
-params2 = {"eta": 0.025, "subsample": 0.7, "min_child_weight": 3, "colsample_bytree": 0.7,
+params2 = {"eta": 0.025, "subsample": 0.95, "min_child_weight": 3, "colsample_bytree": 0.7,
            "max_depth": 10, 'silent': 1, "n_jobs": 12}
 params3 = {"eta": 0.01, "subsample": 0.9, "min_child_weight": 2, "colsample_bytree": 0.9, "gamma":0.01,
            "max_depth": 4, 'silent': 1, "n_jobs": 12}
@@ -53,9 +53,9 @@ params5 = {'n_trees': 500, 'eta': 0.005, 'max_depth': 4, 'subsample': 0.95, 'obj
 
 
 estimators = {RandomForestRegressor(n_estimators=100, n_jobs=12, random_state=42, max_features=0.8): 'RFR1' + BUILD_NAME,
-              XGBRegressor(num_round=5000, verbose_eval=False, params=params1, early_stopping_rounds=25,
+              XGBRegressor(num_round=5000, verbose_eval=False, params=params1, early_stopping_rounds=50,
                            eval_metric=xgb_r2_score): 'XGB1' + BUILD_NAME,
-              XGBRegressor(num_round=5000, verbose_eval=False, params=params2, early_stopping_rounds=25,
+              XGBRegressor(num_round=5000, verbose_eval=False, params=params2, early_stopping_rounds=50,
                            eval_metric=xgb_r2_score): 'XGB2' + BUILD_NAME,
               XGBRegressor(num_round=5000, verbose_eval=False, params=params3, early_stopping_rounds=50,
                            eval_metric=xgb_r2_score): 'XGB3' + BUILD_NAME,
@@ -73,6 +73,11 @@ merc.fit(train, y_train)
 
 lvl1meta_train_regressor = merc.meta_train
 lvl1meta_test_regressor = merc.predict(test)
+
+lvl1meta_train_regressor['ID'] = id_train
+lvl1meta_train_regressor['y'] = y_train
+lvl1meta_test_regressor['ID'] = id_test
+
 
 print('Writing Parquets')
 # store
